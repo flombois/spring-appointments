@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="createServiceProvidersTable" author="flombois">
+        <preConditions onFail="HALT" onError="HALT">
+            <and>
+                <not><tableExists tableName="service-providers" /></not>
+                <tableExists tableName="users" />
+            </and>
+        </preConditions>
+        <createTable tableName="service-providers">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)" >
+               <constraints unique="true" nullable="false" />
+            </column>
+            <column name="description" type="text" >
+                <constraints nullable="false" />
+            </column>
+            <column name="owner" type="uuid" >
+                <constraints nullable="false" foreignKeyName="fk-service-providers-owner" references="users(id)" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
