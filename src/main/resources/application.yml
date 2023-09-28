@@ -7,5 +7,7 @@ spring:
     rest:
       base-path: /api
       detection-strategy: annotated
+      default-page-size: 5
+      max-page-size: 100
   liquibase:
     change-log: classpath:database/root.xml
