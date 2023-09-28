@@ -13,12 +13,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static com.github.flombois.exceptions.RestExceptionHandler.CONSTRAINT_VALIDATION_ERROR;
 import static com.github.flombois.exceptions.RestExceptionHandler.DATA_INTEGRITY_VALIDATION_ERROR;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -185,11 +186,39 @@ public class UserEndpointTests implements PostgresContainerTest {
 
             }
 
+            @Nested
+            @Sql(scripts = "/insert-users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When a user resource is requested")
+            class FetchSingleUser {
+
+                @Test
+                @DisplayName("If the user resource exist then return 200 OK")
+                void success() throws Exception {
+                    mockMvc.perform(get(getResourceUri(UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0")))
+                                    .with(csrf()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.username").value("test"));
+                }
+
+                @Test
+                @DisplayName("If the user resource does not exist then return 404 not found")
+                void notFound() throws Exception {
+                    mockMvc.perform(get(getResourceUri(UUID.randomUUID()))
+                                    .with(csrf()))
+                            .andExpect(status().isNotFound());
+                }
+            }
+
         }
 
     }
 
     String getEndpointUri() {
         return String.format("%s/%s", basePath, UserRepository.ENDPOINT);
+    }
+
+    String getResourceUri(UUID uuid) {
+        return String.format("%s/%s", getEndpointUri(), uuid.toString());
     }
 }
