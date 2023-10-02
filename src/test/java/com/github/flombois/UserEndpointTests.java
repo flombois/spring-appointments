@@ -4,14 +4,11 @@ import com.github.flombois.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
@@ -29,16 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Tests for user endpoint")
-public class UserEndpointTests implements PostgresContainerTest {
+public class UserEndpointTests extends EndpointTests implements PostgresContainerTest {
 
-    @Value("${spring.data.rest.base-path}")
-    private String basePath;
-
-    @Value("${spring.data.rest.default-page-size}")
-    private int defaultPageSize;
-
-    @Autowired
-    private MockMvc mockMvc;
+    @Override
+    protected String getEndpoint() {
+        return UserRepository.ENDPOINT;
+    }
 
     @Nested
     @WithMockUser
@@ -62,7 +55,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                                 "username": "test"
                             }
                             """;
-                    mockMvc.perform(post(getEndpointUri())
+                    getMockMvc().perform(post(getEndpointUri())
                                     .with(csrf())
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(body))
@@ -73,7 +66,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request body is missing then respond with 400 BAD REQUEST")
                 void withoutBody() throws Exception {
-                    mockMvc.perform(post(getEndpointUri())
+                    getMockMvc().perform(post(getEndpointUri())
                                     .with(csrf())
                                     .contentType(MediaType.APPLICATION_JSON))
                             .andExpect(status().isBadRequest());
@@ -82,7 +75,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request body is incomplete then respond with 400 BAD REQUEST")
                 void withIncompleteBody() throws Exception {
-                    mockMvc.perform(post(getEndpointUri())
+                    getMockMvc().perform(post(getEndpointUri())
                                     .with(csrf())
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content("{}"))
@@ -98,7 +91,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                                 "username": ""
                             }
                             """;
-                    mockMvc.perform(post(getEndpointUri())
+                    getMockMvc().perform(post(getEndpointUri())
                                     .with(csrf())
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(body))
@@ -115,7 +108,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                                 "username": "test"
                             }
                             """;
-                    mockMvc.perform(post(getEndpointUri())
+                    getMockMvc().perform(post(getEndpointUri())
                                     .with(csrf())
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(body))
@@ -133,12 +126,12 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request is valid then return paginated results with 200 OK")
                 void success() throws Exception {
-                    mockMvc.perform(get(getEndpointUri()))
+                    getMockMvc().perform(get(getEndpointUri()))
                             .andExpect(status().isOk())
                             // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(defaultPageSize))
+                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / defaultPageSize))
+                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.number").value(0))
                             // Check response body
                             .andExpect(jsonPath("$._embedded.users[0].username").value("test"))
@@ -151,12 +144,12 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request is valid then return sorted by ascending username results with 200 OK")
                 void sortByUsernameAsc() throws Exception {
-                    mockMvc.perform(get(getEndpointUri()+"?sort=username,asc"))
+                    getMockMvc().perform(get(getEndpointUri()+"?sort=username,asc"))
                             .andExpect(status().isOk())
                             // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(defaultPageSize))
+                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / defaultPageSize))
+                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.number").value(0))
                             // Check response body
                             .andExpect(jsonPath("$._embedded.users[0].username").value("admin123"))
@@ -169,12 +162,12 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request is valid then return sorted by descending username results with 200 OK")
                 void sortByUsernameDesc() throws Exception {
-                    mockMvc.perform(get(getEndpointUri()+"?sort=username,desc"))
+                    getMockMvc().perform(get(getEndpointUri()+"?sort=username,desc"))
                             .andExpect(status().isOk())
                             // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(defaultPageSize))
+                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / defaultPageSize))
+                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
                             .andExpect(jsonPath("$.page.number").value(0))
                             // Check response body
                             .andExpect(jsonPath("$._embedded.users[0].username").value("wizard55"))
@@ -195,7 +188,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the user resource exist then return 200 OK")
                 void success() throws Exception {
-                    mockMvc.perform(get(getResourceUri(UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0")))
+                    getMockMvc().perform(get(getResourceUri(UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0")))
                                     .with(csrf()))
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$.username").value("test"));
@@ -204,7 +197,7 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the user resource does not exist then return 404 not found")
                 void notFound() throws Exception {
-                    mockMvc.perform(get(getResourceUri(UUID.randomUUID()))
+                    getMockMvc().perform(get(getResourceUri(UUID.randomUUID()))
                                     .with(csrf()))
                             .andExpect(status().isNotFound());
                 }
@@ -212,13 +205,5 @@ public class UserEndpointTests implements PostgresContainerTest {
 
         }
 
-    }
-
-    String getEndpointUri() {
-        return String.format("%s/%s", basePath, UserRepository.ENDPOINT);
-    }
-
-    String getResourceUri(UUID uuid) {
-        return String.format("%s/%s", getEndpointUri(), uuid.toString());
     }
 }
