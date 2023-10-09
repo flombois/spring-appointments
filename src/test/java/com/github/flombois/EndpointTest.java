@@ -6,7 +6,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-public abstract class EndpointTests {
+public abstract class EndpointTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -17,25 +17,25 @@ public abstract class EndpointTests {
     @Value("${spring.data.rest.default-page-size}")
     private int defaultPageSize;
 
-    protected abstract String getEndpoint();
+    public abstract String getEndpoint();
 
-    protected MockMvc getMockMvc() {
+    public MockMvc getMockMvc() {
         return mockMvc;
     }
 
-    protected String getBasePath() {
+    public String getBasePath() {
         return basePath;
     }
 
-    protected int getDefaultPageSize() {
+    public int getDefaultPageSize() {
         return defaultPageSize;
     }
 
-    protected String getEndpointUri() {
-        return String.format("%s/%s", basePath, getEndpoint());
+    public String getEndpointUri() {
+        return String.format("%s/%s", getBasePath(), getEndpoint());
     }
 
-    protected String getResourceUri(UUID uuid) {
+    public String getResourceUri(UUID uuid) {
         return String.format("%s/%s", getEndpointUri(), uuid.toString());
     }
 }

@@ -1,6 +1,8 @@
 package com.github.flombois;
 
 import com.github.flombois.repositories.UserRepository;
+import com.github.flombois.rest.CreateResourceTest;
+import com.github.flombois.rest.FetchResourceCollectionTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -8,7 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.UUID;
 
@@ -25,13 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext
 @DisplayName("Tests for user endpoint")
-public class UserEndpointTests extends EndpointTests implements PostgresContainerTest {
-
-    @Override
-    protected String getEndpoint() {
-        return UserRepository.ENDPOINT;
-    }
+public class UserEndpointTests implements PostgresContainerTest {
 
     @Nested
     @WithMockUser
@@ -45,58 +45,24 @@ public class UserEndpointTests extends EndpointTests implements PostgresContaine
             @Nested
             @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
             @DisplayName("When user creation is requested")
-            class CreateUser {
+            class CreateUser extends UserEndpointTest implements CreateResourceTest {
 
-                @Test
-                @DisplayName("If the request is valid then respond with 201 CREATED")
-                void success() throws Exception {
-                    final String body = """
+                @Override
+                public String getValidBody() {
+                    return """
                             {
                                 "username": "test"
                             }
                             """;
-                    getMockMvc().perform(post(getEndpointUri())
-                                    .with(csrf())
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(body))
-                            .andExpect(status().isCreated())
-                            .andExpect(jsonPath("$").doesNotExist());
                 }
 
-                @Test
-                @DisplayName("If the request body is missing then respond with 400 BAD REQUEST")
-                void withoutBody() throws Exception {
-                    getMockMvc().perform(post(getEndpointUri())
-                                    .with(csrf())
-                                    .contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(status().isBadRequest());
-                }
-
-                @Test
-                @DisplayName("If the request body is incomplete then respond with 400 BAD REQUEST")
-                void withIncompleteBody() throws Exception {
-                    getMockMvc().perform(post(getEndpointUri())
-                                    .with(csrf())
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content("{}"))
-                            .andExpect(status().isBadRequest())
-                            .andExpect(jsonPath("$.message").value(CONSTRAINT_VALIDATION_ERROR));
-                }
-
-                @Test
-                @DisplayName("If the request body is invalid then respond with 400 BAD REQUEST")
-                void withInvalidBody() throws Exception {
-                    final String body = """
+                @Override
+                public String getInvalidBody() {
+                    return """
                             {
                                 "username": ""
                             }
                             """;
-                    getMockMvc().perform(post(getEndpointUri())
-                                    .with(csrf())
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(body))
-                            .andExpect(status().isBadRequest())
-                            .andExpect(jsonPath("$.message").value(CONSTRAINT_VALIDATION_ERROR));
                 }
 
                 @Test
@@ -121,20 +87,12 @@ public class UserEndpointTests extends EndpointTests implements PostgresContaine
             @Sql(scripts = "/insert-users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
             @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
             @DisplayName("When user collection is requested")
-            class FetchUserCollection {
+            class FetchUserCollection extends UserEndpointTest implements FetchResourceCollectionTest {
 
-                @Test
-                @DisplayName("If the request is valid then return paginated results with 200 OK")
-                void success() throws Exception {
-                    getMockMvc().perform(get(getEndpointUri()))
-                            .andExpect(status().isOk())
-                            // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.number").value(0))
-                            // Check response body
-                            .andExpect(jsonPath("$._embedded.users[0].username").value("test"))
+                @Override
+                public void successValidation(ResultActions resultActions) throws Exception {
+                    // Check response body
+                    resultActions.andExpect(jsonPath("$._embedded.users[0].username").value("test"))
                             .andExpect(jsonPath("$._embedded.users[1].username").value("tangocharlie"))
                             .andExpect(jsonPath("$._embedded.users[2].username").value("remco"))
                             .andExpect(jsonPath("$._embedded.users[3].username").value("virus55"))
@@ -183,7 +141,7 @@ public class UserEndpointTests extends EndpointTests implements PostgresContaine
             @Sql(scripts = "/insert-users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
             @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
             @DisplayName("When a user resource is requested")
-            class FetchSingleUser {
+            class FetchSingleUser extends  UserEndpointTest {
 
                 @Test
                 @DisplayName("If the user resource exist then return 200 OK")

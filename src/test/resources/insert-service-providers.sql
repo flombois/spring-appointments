@@ -1,0 +1,22 @@
+INSERT INTO "service-providers" VALUES
+('78016474-5b3f-42e7-ab7b-a164adc95b0e', 'Flower shop', 'Our flower shop specializes in creating stunning, handcrafted floral arrangements for all occasions.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('a1bcfcb4-9fe5-4f90-877b-496e8500d602', 'Coffee House', 'We offer a variety of premium coffee blends and delicious pastries to satisfy your cravings.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('def38a84-4326-421a-baae-0ea947d35e91', 'Tech Repair Shop', 'We specialize in repairing and upgrading all types of electronic devices.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('4f31e8f7-77c1-47d5-845d-14ffaa52c50b', 'Art Studio', 'Explore your creativity with our art classes and workshops.', '7bf29c36-abb0-4f1d-bc3b-5e6e4c9bb7a1'),
+('d7e43f52-10ab-4eeb-b6e0-47be2f172f4d', 'Fitness Center', 'Achieve your fitness goals with our state-of-the-art gym equipment and personal trainers.', '7bf29c36-abb0-4f1d-bc3b-5e6e4c9bb7a1'),
+('ba2f8c07-d4b1-4fc7-8e91-25e1d24c5e2e', 'Bakery', 'We bake fresh bread, pastries, and cakes daily for your enjoyment.', '7bf29c36-abb0-4f1d-bc3b-5e6e4c9bb7a1'),
+('8ec5b94e-2966-4b85-8e7e-18d3b5be1e4d', 'Bookstore', 'Discover a wide selection of books, magazines, and literary events at our bookstore.', '7bf29c36-abb0-4f1d-bc3b-5e6e4c9bb7a1'),
+('342f3b9e-0c2e-4f0e-8e91-3c7c5d71e978', 'Restaurant', 'Indulge in a culinary journey with our exquisite menu and cozy ambiance.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('99ec6f90-06a6-48d1-9a77-9ab097cc60b9', 'Computer Repair Shop', 'We fix computers, laptops, and tablets with expertise and care.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('b2a30070-3aa3-4c9f-b398-dc9f6d98a0a5', 'Pet Grooming Salon', 'Keep your pets looking their best with our grooming services.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('f3a5a65f-0c9c-42b1-8304-743e31e6f4cd', 'Auto Repair Shop', 'We provide top-notch automotive repair and maintenance services.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
+('24f8cc60-80f0-4b9b-92e6-cd1ecf0d628f', 'Yoga Studio', 'Rejuvenate your mind and body with our yoga classes and wellness programs.', '2e80aa64-8e0d-486a-9a12-1374f79b9b3c'),
+('ca50960a-4165-43f0-af48-b7fdd7c4087a', 'Dental Clinic', 'We offer comprehensive dental care to keep your smile healthy and beautiful.', '2e80aa64-8e0d-486a-9a12-1374f79b9b3c'),
+('b743c3b5-ec82-41d7-a1f9-ecb7c54d9814', 'Home Improvement Store', 'Find everything you need for home improvement and DIY projects.', '2e80aa64-8e0d-486a-9a12-1374f79b9b3c'),
+('e45c2512-372c-4cb7-8cb4-335a7a4531b7', 'Garden Center', 'Create a beautiful outdoor space with our plants, flowers, and gardening supplies.', '2e80aa64-8e0d-486a-9a12-1374f79b9b3c'),
+('ab8f2ad4-6dd7-4680-8b91-57c6e3a3a3f2', 'Clothing Boutique', 'Shop the latest fashion trends and accessories at our boutique.', '2e80aa64-8e0d-486a-9a12-1374f79b9b3c'),
+('c6c7d5a6-43e2-4c62-bca6-4df1b70fcd16', 'Music School', 'Learn to play instruments and explore your musical talents with us.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
+('7e7b12fc-8f7b-40c3-97c9-81461bdf9b2b', 'Spa and Wellness Center', 'Relax and rejuvenate with our spa treatments and wellness programs.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
+('a4f6e4f7-d8ef-4c9c-8c88-51fbcfa70253', 'Photography Studio', 'Capture beautiful moments with our professional photography services.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
+('67e04d2e-be95-41ed-b87d-c179b3b4cff3', 'Computer shop', 'Fix computers', '9f8f45a3-6a47-4810-8e05-0aa7527f9977')
+;
