@@ -2,6 +2,7 @@ package com.github.flombois;
 
 import com.github.flombois.rest.CreateResourceTest;
 import com.github.flombois.rest.FetchResourceCollectionTest;
+import com.github.flombois.rest.FetchSingleResourceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -131,23 +132,25 @@ public class UserEndpointTests implements PostgresContainerTest {
             @Sql(scripts = "/insert-users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
             @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
             @DisplayName("When a user resource is requested")
-            class FetchSingleUser extends  UserEndpointTest {
+            class FetchSingleUser extends UserEndpointTest implements FetchSingleResourceTest {
 
                 @Test
                 @DisplayName("If the user resource exist then return 200 OK")
                 void success() throws Exception {
-                    getMockMvc().perform(get(getResourceUri(UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0")))
+                    getMockMvc().perform(get(getResourceUri(validUUID()))
                                     .with(csrf()))
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$.username").value("test"));
                 }
 
-                @Test
-                @DisplayName("If the user resource does not exist then return 404 not found")
-                void notFound() throws Exception {
-                    getMockMvc().perform(get(getResourceUri(UUID.randomUUID()))
-                                    .with(csrf()))
-                            .andExpect(status().isNotFound());
+                @Override
+                public UUID validUUID() {
+                    return UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0");
+                }
+
+                @Override
+                public UUID notFoundUUID() {
+                    return UUID.randomUUID();
                 }
             }
 
