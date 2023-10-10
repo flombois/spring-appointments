@@ -1,6 +1,5 @@
 package com.github.flombois;
 
-import com.github.flombois.repositories.UserRepository;
 import com.github.flombois.rest.CreateResourceTest;
 import com.github.flombois.rest.FetchResourceCollectionTest;
 import org.junit.jupiter.api.DisplayName;
@@ -12,11 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.UUID;
 
-import static com.github.flombois.exceptions.RestExceptionHandler.CONSTRAINT_VALIDATION_ERROR;
 import static com.github.flombois.exceptions.RestExceptionHandler.DATA_INTEGRITY_VALIDATION_ERROR;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -89,26 +86,24 @@ public class UserEndpointTests implements PostgresContainerTest {
             @DisplayName("When user collection is requested")
             class FetchUserCollection extends UserEndpointTest implements FetchResourceCollectionTest {
 
-                @Override
-                public void successValidation(ResultActions resultActions) throws Exception {
-                    // Check response body
-                    resultActions.andExpect(jsonPath("$._embedded.users[0].username").value("test"))
+                @Test
+                @DisplayName("If the request is valid then return paginated results with 200 OK")
+                void success() throws Exception {
+                   checkPagination(getMockMvc().perform(get(getEndpointUri()))
+                            .andExpect(status().isOk()))
+                            .andExpect(jsonPath("$._embedded.users[0].username").value("test"))
                             .andExpect(jsonPath("$._embedded.users[1].username").value("tangocharlie"))
                             .andExpect(jsonPath("$._embedded.users[2].username").value("remco"))
                             .andExpect(jsonPath("$._embedded.users[3].username").value("virus55"))
                             .andExpect(jsonPath("$._embedded.users[4].username").value("johndoe"));
                 }
 
+
                 @Test
                 @DisplayName("If the request is valid then return sorted by ascending username results with 200 OK")
                 void sortByUsernameAsc() throws Exception {
-                    getMockMvc().perform(get(getEndpointUri()+"?sort=username,asc"))
-                            .andExpect(status().isOk())
-                            // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.number").value(0))
+                    checkPagination(getMockMvc().perform(get(getEndpointUri()+"?sort=username,asc"))
+                            .andExpect(status().isOk()))
                             // Check response body
                             .andExpect(jsonPath("$._embedded.users[0].username").value("admin123"))
                             .andExpect(jsonPath("$._embedded.users[1].username").value("dragon99"))
@@ -120,13 +115,8 @@ public class UserEndpointTests implements PostgresContainerTest {
                 @Test
                 @DisplayName("If the request is valid then return sorted by descending username results with 200 OK")
                 void sortByUsernameDesc() throws Exception {
-                    getMockMvc().perform(get(getEndpointUri()+"?sort=username,desc"))
-                            .andExpect(status().isOk())
-                            // Ensure pagination is properly set
-                            .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.totalElements").value(20))
-                            .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
-                            .andExpect(jsonPath("$.page.number").value(0))
+                    checkPagination(getMockMvc().perform(get(getEndpointUri()+"?sort=username,desc"))
+                            .andExpect(status().isOk()))
                             // Check response body
                             .andExpect(jsonPath("$._embedded.users[0].username").value("wizard55"))
                             .andExpect(jsonPath("$._embedded.users[1].username").value("warrior44"))

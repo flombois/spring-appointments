@@ -93,10 +93,6 @@ public class ServiceProviderEndpointTests implements PostgresContainerTest {
             @DisplayName("When service provider collection is requested")
             class FetchServiceProviderCollection extends ServiceProviderEndpointTest implements FetchResourceCollectionTest {
 
-                @Override
-                public void successValidation(ResultActions resultActions) throws Exception {
-
-                }
             }
 
         }

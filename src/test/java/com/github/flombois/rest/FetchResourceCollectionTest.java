@@ -12,20 +12,13 @@ public interface FetchResourceCollectionTest extends ResourceTest {
 
     int getDefaultPageSize();
 
-    @Test
-    @DisplayName("If the request is valid then return paginated results with 200 OK")
-    default void success() throws Exception {
-        ResultActions resultActions = getMockMvc().perform(get(getEndpointUri()))
-                .andExpect(status().isOk())
-                // Ensure pagination is properly set
-                .andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
+    default ResultActions checkPagination(ResultActions resultActions) throws Exception {
+        // Ensure pagination is properly set
+        resultActions.andExpect(jsonPath("$.page.size").value(getDefaultPageSize()))
                 .andExpect(jsonPath("$.page.totalElements").value(20))
                 .andExpect(jsonPath("$.page.totalPages").value(20 / getDefaultPageSize()))
                 .andExpect(jsonPath("$.page.number").value(0));
-
-        // Let implementation perform extra validation checks
-        successValidation(resultActions);
+        return resultActions;
     }
 
-     void successValidation(ResultActions resultActions) throws Exception;
 }
