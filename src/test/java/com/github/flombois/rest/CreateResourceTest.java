@@ -19,7 +19,7 @@ public interface CreateResourceTest extends ResourceTest {
 
     @Test
     @DisplayName("If the request is valid then respond with 201 CREATED")
-    default void created() throws Exception {
+    default void success() throws Exception {
         getMockMvc().perform(post(getEndpointUri())
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)

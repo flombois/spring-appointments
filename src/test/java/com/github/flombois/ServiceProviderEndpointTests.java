@@ -3,6 +3,7 @@ package com.github.flombois;
 import com.github.flombois.rest.CreateResourceTest;
 import com.github.flombois.rest.FetchResourceCollectionTest;
 import com.github.flombois.rest.FetchSingleResourceTest;
+import com.github.flombois.rest.UpdateResourceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -162,6 +163,41 @@ public class ServiceProviderEndpointTests implements PostgresContainerTest {
                             .andExpect(jsonPath("$.name").value("Flower shop"));
                 }
 
+            }
+
+            @Nested
+            @Sql(scripts = {"/insert-users.sql" ,"/insert-service-providers.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = {"/truncate-service-providers.sql", "/truncate-users.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When service provider resource is updated")
+            class UpdateServiceProvider extends ServiceProviderEndpointTest implements UpdateResourceTest {
+
+
+                @Override
+                public String getValidBody() {
+                    return """
+                            {
+                                "name": "New flower shop",
+                                "description": "Under renovation",
+                                "owner": "/users/a90b964c-90e2-4b1a-88af-3643b53c4789"
+                            }
+                            """;
+                }
+
+                @Override
+                public String getInvalidBody() {
+                    return  """
+                            {
+                                "name": "",
+                                "description": "test description",
+                                "owner": "/users/aec4f0a1-d547-4a93-b201-dc6943739de0"
+                            }
+                            """;
+                }
+
+                @Override
+                public UUID getValidUUID() {
+                    return UUID.fromString("78016474-5b3f-42e7-ab7b-a164adc95b0e");
+                }
             }
 
         }
