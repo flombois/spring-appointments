@@ -6,11 +6,11 @@
     <changeSet id="createServiceProvidersTable" author="flombois">
         <preConditions onFail="HALT" onError="HALT">
             <and>
-                <not><tableExists tableName="service-providers" /></not>
+                <not><tableExists tableName="service_providers" /></not>
                 <tableExists tableName="users" />
             </and>
         </preConditions>
-        <createTable tableName="service-providers">
+        <createTable tableName="service_providers">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>

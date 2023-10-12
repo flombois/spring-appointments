@@ -5,4 +5,5 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="classpath:database/tables/create-users.xml" />
     <include file="classpath:database/tables/create-service-providers.xml" />
+    <include file="classpath:database/tables/create-appointments.xml" />
 </databaseChangeLog>

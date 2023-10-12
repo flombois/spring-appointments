@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
-@Table(name = "service-providers", schema = "public")
+@Table(name = "service_providers", schema = "public")
 public class ServiceProvider extends PersistentEntity<UUID> {
 
     @NotBlank

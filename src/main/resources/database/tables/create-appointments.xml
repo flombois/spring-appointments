@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="createAppointmentsTable" author="flombois">
+        <preConditions onFail="HALT" onError="HALT">
+            <and>
+                <not><tableExists tableName="appointments" /></not>
+                <tableExists tableName="service_providers" />
+                <tableExists tableName="users" />
+            </and>
+        </preConditions>
+        <createTable tableName="appointments">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="customer" type="uuid" >
+                <constraints nullable="false" foreignKeyName="fk-appointments-customer" references="users(id)" />
+            </column>
+            <column name="service_provider" type="uuid" >
+                <constraints nullable="false" foreignKeyName="fk-appointments-service-provider" references="service_providers(id)" />
+            </column>
+            <column name="startDateTime" type="timestamp with timezone">
+                <constraints nullable="false" />
+            </column>
+            <column name="duration" type="smallint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

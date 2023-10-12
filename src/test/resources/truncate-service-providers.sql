@@ -1,1 +1,1 @@
-truncate table "service-providers" cascade;
+truncate table service_providers cascade;

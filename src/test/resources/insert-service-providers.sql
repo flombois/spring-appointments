@@ -1,4 +1,4 @@
-INSERT INTO "service-providers" VALUES
+INSERT INTO service_providers VALUES
 ('78016474-5b3f-42e7-ab7b-a164adc95b0e', 'Flower shop', 'Our flower shop specializes in creating stunning, handcrafted floral arrangements for all occasions.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
 ('a1bcfcb4-9fe5-4f90-877b-496e8500d602', 'Coffee House', 'We offer a variety of premium coffee blends and delicious pastries to satisfy your cravings.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
 ('def38a84-4326-421a-baae-0ea947d35e91', 'Tech Repair Shop', 'We specialize in repairing and upgrading all types of electronic devices.', 'aec4f0a1-d547-4a93-b201-dc6943739de0'),
@@ -18,5 +18,4 @@ INSERT INTO "service-providers" VALUES
 ('c6c7d5a6-43e2-4c62-bca6-4df1b70fcd16', 'Music School', 'Learn to play instruments and explore your musical talents with us.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
 ('7e7b12fc-8f7b-40c3-97c9-81461bdf9b2b', 'Spa and Wellness Center', 'Relax and rejuvenate with our spa treatments and wellness programs.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
 ('a4f6e4f7-d8ef-4c9c-8c88-51fbcfa70253', 'Photography Studio', 'Capture beautiful moments with our professional photography services.', '9f8f45a3-6a47-4810-8e05-0aa7527f9977'),
-('67e04d2e-be95-41ed-b87d-c179b3b4cff3', 'Computer shop', 'Fix computers', '9f8f45a3-6a47-4810-8e05-0aa7527f9977')
-;
+('67e04d2e-be95-41ed-b87d-c179b3b4cff3', 'Computer shop', 'Fix computers', '9f8f45a3-6a47-4810-8e05-0aa7527f9977');
