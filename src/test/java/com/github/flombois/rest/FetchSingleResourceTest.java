@@ -17,7 +17,7 @@ public interface FetchSingleResourceTest extends ResourceTest {
     UUID notFoundUUID();
 
     @Test
-    @DisplayName("If the resource does not exist then return 404 not found")
+    @DisplayName("If the resource does not exist then return 404 NOT FOUND")
     default void notFound() throws Exception {
         getMockMvc().perform(get(getResourceUri(notFoundUUID()))
                         .with(csrf()))

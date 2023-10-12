@@ -1,9 +1,6 @@
 package com.github.flombois;
 
-import com.github.flombois.rest.CreateResourceTest;
-import com.github.flombois.rest.FetchResourceCollectionTest;
-import com.github.flombois.rest.FetchSingleResourceTest;
-import com.github.flombois.rest.UpdateResourceTest;
+import com.github.flombois.rest.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -185,6 +182,22 @@ public class UserEndpointTests implements PostgresContainerTest {
                 }
             }
 
+            @Nested
+            @Sql(scripts = "/insert-users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = "/truncate-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When a user resource deletion is requested")
+            class DeleteUser extends UserEndpointTest implements DeleteResourceTest {
+
+                @Override
+                public UUID validUUID() {
+                    return UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0");
+                }
+
+                @Override
+                public UUID notFoundUUID() {
+                    return UUID.randomUUID();
+                }
+            }
         }
 
     }
