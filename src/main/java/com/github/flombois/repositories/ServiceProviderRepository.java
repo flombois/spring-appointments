@@ -10,6 +10,7 @@ import java.util.UUID;
 import static com.github.flombois.repositories.ServiceProviderRepository.ENDPOINT;
 
 @RepositoryRestResource(path = ENDPOINT)
-public interface ServiceProviderRepository extends CrudRepository<ServiceProvider, UUID>, PagingAndSortingRepository<ServiceProvider, UUID> {
+public interface ServiceProviderRepository extends CrudRepository<ServiceProvider, UUID>,
+        PagingAndSortingRepository<ServiceProvider, UUID> {
     String ENDPOINT = "service-providers";
 }
