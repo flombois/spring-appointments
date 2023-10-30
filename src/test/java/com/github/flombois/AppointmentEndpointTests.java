@@ -37,12 +37,26 @@ public class AppointmentEndpointTests implements PostgresContainerTest {
 
                 @Override
                 public String getValidBody() {
-                    return null;
+                    return """
+                            {
+                                "customer": "/users/aec4f0a1-d547-4a93-b201-dc6943739de0",
+                                "serviceProvider": "/service-providers/78016474-5b3f-42e7-ab7b-a164adc95b0e",
+                                "startDateTime": "2023-11-04T13:00:00+00:00",
+                                "duration": 10
+                            }
+                            """;
                 }
 
                 @Override
                 public String getInvalidBody() {
-                    return null;
+                    return """
+                            {
+                                "customer": "/users/aec4f0a1-d547-4a93-b201-dc6943739de0",
+                                "serviceProvider": "/service-providers/78016474-5b3f-42e7-ab7b-a164adc95b0e",
+                                "startDateTime": "2023-11-04T13:00:00+00:00",
+                                "duration": 0
+                            }
+                            """;
                 }
             }
         }

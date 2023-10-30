@@ -21,7 +21,7 @@
             <column name="service_provider" type="uuid" >
                 <constraints nullable="false" foreignKeyName="fk-appointments-service-provider" references="service_providers(id)" />
             </column>
-            <column name="startDateTime" type="timestamp with timezone">
+            <column name="start_datetime" type="timestamp with timezone">
                 <constraints nullable="false" />
             </column>
             <column name="duration" type="smallint">

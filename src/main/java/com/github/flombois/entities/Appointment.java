@@ -11,17 +11,18 @@ import java.util.UUID;
 public class Appointment extends PersistentEntity<UUID> {
 
     @ManyToOne
-    @JoinColumn(name = "customer")
+    @JoinColumn(name = "customer", nullable = false)
     private User customer;
 
     @ManyToOne
-    @JoinColumn(name = "serviceProvider")
+    @JoinColumn(name = "service_provider", nullable = false)
     private ServiceProvider serviceProvider;
 
-    @Column(name = "startDateTime", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
+    @Column(name = "start_datetime", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
     private OffsetDateTime startDateTime;
 
-    @Min(0)
+    // Minimum duration of an appointment is 5 minutes
+    @Min(5)
     @Column(name = "duration", nullable = false)
     private short duration;
 
