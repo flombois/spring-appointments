@@ -1,9 +1,11 @@
 package com.github.flombois.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -29,6 +31,52 @@ public class Appointment extends PersistentEntity<UUID> {
     @Min(5)
     @Column(name = "duration", nullable = false)
     private short duration;
+
+
+    /**
+     * Calculate appointment end
+     * @return The appointment end timestamp
+     */
+    @JsonIgnore
+    @Transient
+    public OffsetDateTime getEndDateTime() {
+        // end = start + duration - 1s
+        return startDateTime.plus(Duration.ofMinutes(duration)).minus(Duration.ofSeconds(1));
+    }
+
+    /**
+     * Check if the appointment is over before the supplied appointment starts
+     * @param otherAppointment The appointment to compare
+     * @return true if appointment is over, false otherwise
+     */
+    @JsonIgnore
+    @Transient
+    public boolean finishBefore(Appointment otherAppointment) {
+        return getEndDateTime().isBefore(otherAppointment.getStartDateTime());
+    }
+
+    /**
+     * Check if the appointment starts after the supplied appointment is over
+     * @param otherAppointment The appointment to compare
+     * @return true if appointment starts after, false otherwise
+     */
+    @JsonIgnore
+    @Transient
+    public boolean startAfter(Appointment otherAppointment) {
+        return getStartDateTime().isAfter(otherAppointment.getEndDateTime());
+    }
+
+    /**
+     * Compare appointments to check overlapping
+     * @param otherAppointment The appointment to compare
+     * @return false if the appointment is either finished or starts after the supplied appointment
+     */
+    @JsonIgnore
+    @Transient
+    public boolean overlaps(Appointment otherAppointment) {
+        return !(finishBefore(otherAppointment) || startAfter(otherAppointment));
+    }
+
 
     public User getCustomer() {
         return customer;
