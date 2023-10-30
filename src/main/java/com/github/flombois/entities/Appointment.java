@@ -2,6 +2,7 @@ package com.github.flombois.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -10,14 +11,17 @@ import java.util.UUID;
 @Table(name = "appointments", schema = "public")
 public class Appointment extends PersistentEntity<UUID> {
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "customer", nullable = false)
     private User customer;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "service_provider", nullable = false)
     private ServiceProvider serviceProvider;
 
+    @NotNull
     @Column(name = "start_datetime", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
     private OffsetDateTime startDateTime;
 
