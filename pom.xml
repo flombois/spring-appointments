@@ -92,10 +92,14 @@
 	</dependencies>
 
 	<build>
+		<finalName>spring-appointments</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.github.flombois.SpringAppointmentsApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

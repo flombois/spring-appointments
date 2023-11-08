@@ -1,11 +1,29 @@
+version: "3"
 
 services:
   postgres:
     image: postgres:15.4
-    container_name: postgres_15.4
+    container_name: postgres_spring_appointments
+    networks:
+      - spring_appointments
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=spring-appointments
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  app:
+    image: ${IMAGE}
+    container_name: app_spring_appointments
+    networks:
+      - spring_appointments
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+
+networks:
+  spring_appointments:
