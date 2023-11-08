@@ -1,4 +1,4 @@
-package com.github.flombois;
+package com.github.flombois.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

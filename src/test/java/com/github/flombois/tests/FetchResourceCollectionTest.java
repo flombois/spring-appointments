@@ -1,4 +1,4 @@
-package com.github.flombois.rest;
+package com.github.flombois.tests;
 
 import org.springframework.test.web.servlet.ResultActions;
 

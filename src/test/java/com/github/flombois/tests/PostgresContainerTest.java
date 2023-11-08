@@ -1,4 +1,4 @@
-package com.github.flombois;
+package com.github.flombois.tests;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

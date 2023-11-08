@@ -1,4 +1,4 @@
-package com.github.flombois.rest;
+package com.github.flombois.tests;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

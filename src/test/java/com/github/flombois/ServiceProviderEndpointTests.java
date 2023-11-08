@@ -1,6 +1,7 @@
 package com.github.flombois;
 
-import com.github.flombois.rest.*;
+import com.github.flombois.endpoints.ServiceProviderEndpointTest;
+import com.github.flombois.tests.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

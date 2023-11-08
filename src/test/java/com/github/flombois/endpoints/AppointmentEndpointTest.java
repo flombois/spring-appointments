@@ -1,4 +1,4 @@
-package com.github.flombois;
+package com.github.flombois.endpoints;
 
 import com.github.flombois.repositories.AppointmentRepository;
 
