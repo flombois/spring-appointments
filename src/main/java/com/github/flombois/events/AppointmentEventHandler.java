@@ -6,14 +6,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.Set;
 
@@ -44,7 +41,9 @@ public class AppointmentEventHandler {
         validate(appointment);
        boolean isValid =  appointmentRepository.findAppointmentsByStartDateTimeAndServiceProvider(
                Date.from(appointment.getStartDateTime().toInstant()), appointment.getServiceProvider().getId())
-               .stream().filter(appointment::overlaps)
+               .stream()
+               .filter(existingAppointment -> !existingAppointment.getCustomer().equals(appointment.getCustomer()))
+               .filter(appointment::overlaps)
                .toList().isEmpty();
        if(!isValid) {
            throw new DataIntegrityViolationException("An appointment already exists for specified dates");

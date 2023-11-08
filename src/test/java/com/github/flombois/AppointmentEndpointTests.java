@@ -1,6 +1,8 @@
 package com.github.flombois;
 
 import com.github.flombois.rest.CreateResourceTest;
+import com.github.flombois.rest.DeleteResourceTest;
+import com.github.flombois.rest.UpdateResourceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.UUID;
 
 import static com.github.flombois.exceptions.RestExceptionHandler.DATA_INTEGRITY_VALIDATION_ERROR;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -40,7 +44,7 @@ public class AppointmentEndpointTests implements PostgresContainerTest {
                     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
             @Sql(scripts = {"/truncate-appointments.sql", "/truncate-service-providers.sql", "/truncate-users.sql"},
                     executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-            @DisplayName("When service provider creation is requested")
+            @DisplayName("When appointment creation is requested")
             class CreateAppointment extends AppointmentEndpointTest implements CreateResourceTest {
 
                 @Override
@@ -142,6 +146,60 @@ public class AppointmentEndpointTests implements PostgresContainerTest {
                             .andExpect(status().isCreated())
                             .andExpect(jsonPath("$").doesNotExist());
                 }
+            }
+
+            @Nested
+            @Sql(scripts = {"/insert-users.sql", "/insert-service-providers.sql", "/insert-appointments.sql"},
+                    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = {"/truncate-appointments.sql", "/truncate-service-providers.sql", "/truncate-users.sql"},
+                    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When appointment creation is requested")
+            class UpdateAppointment  extends AppointmentEndpointTest implements UpdateResourceTest {
+
+                @Override
+                public String getValidBody() {
+                    return """
+                            {
+                                "customer": "/users/aec4f0a1-d547-4a93-b201-dc6943739de0",
+                                "serviceProvider": "/service-providers/78016474-5b3f-42e7-ab7b-a164adc95b0e",
+                                "startDateTime": "2023-10-30T08:00:00+00",
+                                "duration": 30
+                            }
+                            """;
+                }
+
+                @Override
+                public String getInvalidBody() {
+                    return """
+                            {
+                                "customer": "/users/aec4f0a1-d547-4a93-b201-dc6943739de0",
+                                "serviceProvider": "/service-providers/78016474-5b3f-42e7-ab7b-a164adc95b0e",
+                                "startDateTime": "2023-10-30T08:00:00+00",
+                                "duration": 0
+                            }
+                            """;
+                }
+
+                @Override
+                public UUID getValidUUID() {
+                    return UUID.fromString("0114d846-4266-4fa8-b600-0c8e4916cc14");
+                }
+            }
+
+
+            @Nested
+            @Sql(scripts = {"/insert-users.sql", "/insert-service-providers.sql", "/insert-appointments.sql"},
+                    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = {"/truncate-appointments.sql", "/truncate-service-providers.sql", "/truncate-users.sql"},
+                    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When appointment deletion is requested")
+            class DeleteAppointment extends AppointmentEndpointTest implements DeleteResourceTest {
+
+                @Override
+                public UUID validUUID() {
+                    return UUID.fromString("0114d846-4266-4fa8-b600-0c8e4916cc14");
+                }
+
             }
         }
     }

@@ -193,10 +193,6 @@ public class UserEndpointTests implements PostgresContainerTest {
                     return UUID.fromString("aec4f0a1-d547-4a93-b201-dc6943739de0");
                 }
 
-                @Override
-                public UUID notFoundUUID() {
-                    return UUID.randomUUID();
-                }
             }
         }
 

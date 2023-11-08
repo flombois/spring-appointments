@@ -14,7 +14,9 @@ public interface DeleteResourceTest extends ResourceTest {
 
     UUID validUUID();
 
-    UUID notFoundUUID();
+    default UUID notFoundUUID() {
+        return UUID.randomUUID();
+    }
 
     @Test
     @DisplayName("If the resource exists then return 204 NO CONTENT")
