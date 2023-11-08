@@ -1,10 +1,7 @@
 package com.github.flombois;
 
 import com.github.flombois.endpoints.AppointmentEndpointTest;
-import com.github.flombois.tests.CreateResourceTest;
-import com.github.flombois.tests.DeleteResourceTest;
-import com.github.flombois.tests.PostgresContainerTest;
-import com.github.flombois.tests.UpdateResourceTest;
+import com.github.flombois.tests.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -206,7 +203,9 @@ public class AppointmentEndpointTests implements PostgresContainerTest {
         }
     }
 
-    class UnAuthenticated {
+    @Nested
+    @DisplayName("Given the user is NOT authenticated")
+    class UnAuthenticated extends AppointmentEndpointTest implements UnauthenticatedTest {
 
     }
 }
