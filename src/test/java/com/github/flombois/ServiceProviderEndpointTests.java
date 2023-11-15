@@ -148,10 +148,6 @@ public class ServiceProviderEndpointTests implements PostgresContainerTest {
                     return UUID.fromString("78016474-5b3f-42e7-ab7b-a164adc95b0e");
                 }
 
-                @Override
-                public UUID notFoundUUID() {
-                    return UUID.randomUUID();
-                }
 
                 @Test
                 @DisplayName("If the service provider resource exist then return 200 OK")

@@ -35,10 +35,13 @@ public abstract class EndpointTest {
         return String.format("%s/%s", getBasePath(), getEndpoint());
     }
 
+    public String getSearchEndpointUri(String search) {
+        return String.format("%s/search/%s", getEndpointUri(), search);
+    }
+
     public String getResourceUri(UUID uuid) {
         return String.format("%s/%s", getEndpointUri(), uuid.toString());
     }
-
 
     public String getResourceUrl(UUID uuid) {
         return String.format("http://localhost%s", getResourceUri(uuid));

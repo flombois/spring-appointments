@@ -15,8 +15,10 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.UUID;
 
 import static com.github.flombois.exceptions.RestExceptionHandler.DATA_INTEGRITY_VALIDATION_ERROR;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -144,6 +146,69 @@ public class AppointmentEndpointTests implements PostgresContainerTest {
                                     .content(body))
                             .andExpect(status().isCreated())
                             .andExpect(jsonPath("$").doesNotExist());
+                }
+            }
+
+
+            @Nested
+            @Sql(scripts = {"/insert-users.sql", "/insert-service-providers.sql", "/insert-appointments.sql"},
+                    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = {"/truncate-appointments.sql", "/truncate-service-providers.sql", "/truncate-users.sql"},
+                    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When appointment collection is requested")
+            class FetchAppointmentCollection extends AppointmentEndpointTest implements FetchResourceCollectionTest {
+
+                @Test
+                @DisplayName("If the request is valid then return paginated results with 200 OK")
+                void success() throws Exception {
+                    checkPagination(getMockMvc().perform(get(getEndpointUri()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$._embedded.appointments[0].startDateTime").value("2023-10-30T08:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[0].duration").value(60))
+                            .andExpect(jsonPath("$._embedded.appointments[1].startDateTime").value("2023-10-31T09:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[1].duration").value(45))
+                            .andExpect(jsonPath("$._embedded.appointments[2].startDateTime").value("2023-11-01T10:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[2].duration").value(30))
+                            .andExpect(jsonPath("$._embedded.appointments[3].startDateTime").value("2023-11-02T11:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[3].duration").value(90))
+                            .andExpect(jsonPath("$._embedded.appointments[4].startDateTime").value("2023-11-03T12:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[4].duration").value(120)));
+                }
+
+                @Test
+                @DisplayName("If the request is valid and contains a date filter then return filtered and paginated results with 200 OK")
+                void filterByDate() throws Exception {
+                    getMockMvc().perform(get(getSearchEndpointUri("findByDateAndServiceProvider"))
+                                    .param("date", "2023-10-30")
+                                    .param("service_provider", "78016474-5b3f-42e7-ab7b-a164adc95b0e"))
+                            .andExpect(jsonPath("$._embedded.appointments").isArray())
+                            .andExpect(jsonPath("$._embedded.appointments", hasSize(1)))
+                            .andExpect(jsonPath("$._embedded.appointments[0].startDateTime").value("2023-10-30T08:00:00Z"))
+                            .andExpect(jsonPath("$._embedded.appointments[0].duration").value(60));
+                }
+            }
+
+
+            @Nested
+            @Sql(scripts = {"/insert-users.sql", "/insert-service-providers.sql", "/insert-appointments.sql"},
+                    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            @Sql(scripts = {"/truncate-appointments.sql", "/truncate-service-providers.sql", "/truncate-users.sql"},
+                    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+            @DisplayName("When appointment collection is requested")
+            class FetchSingleAppointment extends AppointmentEndpointTest implements FetchSingleResourceTest {
+
+                @Override
+                public UUID validUUID() {
+                    return UUID.fromString("0114d846-4266-4fa8-b600-0c8e4916cc14");
+                }
+
+                @Test
+                @DisplayName("If the service provider resource exist then return 200 OK")
+                void success() throws Exception {
+                    getMockMvc().perform(get(getResourceUri(validUUID()))
+                                    .with(csrf()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.startDateTime").value("2023-10-30T08:00:00Z"));
                 }
             }
 

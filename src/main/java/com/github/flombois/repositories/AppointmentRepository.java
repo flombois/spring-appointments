@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 import java.util.Date;
@@ -27,10 +28,10 @@ public interface AppointmentRepository extends CrudRepository<Appointment, UUID>
             SELECT *
             FROM Appointments a
             WHERE a.service_provider = :service_provider
-              AND date(a.start_datetime) = date(:start_datetime)
+              AND date(a.start_datetime) = date(:date)
     """, nativeQuery = true)
-    List<Appointment> findAppointmentsByStartDateTimeAndServiceProvider(
-            @Param("start_datetime") @Temporal(TemporalType.DATE) Date startDateTime,
+    List<Appointment> findByDateAndServiceProvider(
+            @Param("date") @Temporal(TemporalType.DATE) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
             @Param("service_provider") UUID serviceProviderId);
 
 }

@@ -39,7 +39,7 @@ public class AppointmentEventHandler {
     @HandleBeforeSave
     public void handleAppointmentSave(Appointment appointment) {
         validate(appointment);
-       boolean isValid =  appointmentRepository.findAppointmentsByStartDateTimeAndServiceProvider(
+       boolean isValid =  appointmentRepository.findByDateAndServiceProvider(
                Date.from(appointment.getStartDateTime().toInstant()), appointment.getServiceProvider().getId())
                .stream()
                .filter(existingAppointment -> !existingAppointment.getCustomer().equals(appointment.getCustomer()))

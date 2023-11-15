@@ -14,7 +14,9 @@ public interface FetchSingleResourceTest extends ResourceTest {
 
     UUID validUUID();
 
-    UUID notFoundUUID();
+     default UUID notFoundUUID() {
+         return UUID.randomUUID();
+     }
 
     @Test
     @DisplayName("If the resource does not exist then return 404 NOT FOUND")
